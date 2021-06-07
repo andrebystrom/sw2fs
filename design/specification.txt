@@ -1,0 +1,7 @@
+HTTP Server that can handle GET requests for files and directories. if a request other than a GET request is recieved an error HTTP response should be returned. The other HTTP methods should however be able to be easily implemented in the future.
+
+When a request is received, it should kick of a new thread to handle the request from the thread pool. The request should be parsed to figure out what resource the client is requesting and via what HTTP method. If it's a directory the files in that directory should be listed as HTML. If it's a file the file should be returned as a byte stream. If the resource does not exist an HTTP error should be returned.
+
+The application should require a file path for the HTTP root that should be sent as an argument. If no path is given as an argument or if the path is invalid the application should exit with an error.
+
+The application should only be able to handle 20 simultaneous requests(arbitrary limit that should be easily changed).
