@@ -1,0 +1,6 @@
+HTTPServer - Receive requests and handle them.
+HttpRequestHandler - Handle HTTP Requests depending on the HTTP method etc.
+HttpRequestParser - Parse HTTP Requests.
+HttpRequest - Contains content and information in an HTTP request.
+ThreadPool(optional) - Keeps track of available threads.
+SW2FS - Main class responsible for getting the commandline arguments and kicking of the server.

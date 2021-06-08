@@ -1,0 +1,23 @@
+Name: HTTPServer
+Responsibility - Collaborators:
+Receive requests - ServerSocket
+Handle requests - RequestHandler, Thread(pool)
+
+------------------------------------------------
+
+Name: HttpRequestHandler
+Responsibility - Collaborators:
+Parse HTTP Request - HttpRequestParser, Socket
+Handle HTTP Request depending on the HTTP method - 
+
+------------------------------------------------
+
+Name: HttpRequestParser
+Responsibility - Collaborators:
+Parse HTTP Requests - OutputStream, HttpRequest
+
+------------------------------------------------
+
+Name: HttpRequest
+Responsibility - Collaborators:
+Model for an HTTP request -
