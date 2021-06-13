@@ -25,11 +25,16 @@ public class HTTPResponseCreator
                 else if(f.isDirectory())
                 {
                     StringBuilder sb = new StringBuilder();
+                    sb.append("<table>\n");
+                    sb.append("<tr>\n<th>Name</th>\n<th>Size(mb)</th>\n");
                     for(var file : f.listFiles())
                     {
-                        sb.append(file.getName());
-                        sb.append("\n");
+                        sb.append("<tr>\n");
+                        sb.append("<td>" + "<a href=\"." + file.getPath() + "\">" + file.getName() + "</a></td>");
+                        sb.append("<td>" + file.getTotalSpace() * 10E-6 + "</td>");
+                        sb.append("</tr>\n");
                     }
+                    sb.append("</table>\n");
                     response.setBody(sb.toString());
                 }
                 else if(f.isFile())
