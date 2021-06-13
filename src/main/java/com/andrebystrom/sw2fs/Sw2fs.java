@@ -6,7 +6,13 @@ import java.net.Socket;
 
 public class Sw2fs
 {
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException, InterruptedException
+    {
+        var httpServer = new HTTPServer(new File("."));
+        httpServer.run();
+    }
+
+    public static void old() throws IOException
     {
         ServerSocket socket = new ServerSocket(1800);
         while(true)
