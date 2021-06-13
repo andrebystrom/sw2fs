@@ -1,10 +1,10 @@
-package com.andrebystrom.sw2fs;
+package com.andrebystrom.sw2fs.web;
 
-import java.io.IOException;
+import java.text.ParseException;
 
 public class HTTPRequestParser
 {
-    public HTTPRequest parseRequest(String request)
+    public HTTPRequest parseRequest(String request) throws ParseException
     {
         HTTPMethod method;
         String path;
@@ -16,7 +16,7 @@ public class HTTPRequestParser
         return new HTTPRequest(method, path, null);
     }
 
-    private HTTPMethod getHTTPMethod(String firstLine)
+    private HTTPMethod getHTTPMethod(String firstLine) throws ParseException
     {
         for(var method : HTTPMethod.values())
         {
@@ -25,15 +25,15 @@ public class HTTPRequestParser
                 return method;
             }
         }
-        return null;
+        throw new ParseException("Invalid HTTP request!", 1);
     }
 
-    private String getHTTPPath(String firstLine)
+    private String getHTTPPath(String firstLine) throws ParseException
     {
         String[] words = firstLine.split(" ");
         if(words.length < 2)
         {
-            return null;
+            throw new ParseException("Invalid HTTP Request!", 1);
         }
         return words[1];
     }

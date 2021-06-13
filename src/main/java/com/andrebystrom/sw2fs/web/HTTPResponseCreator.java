@@ -1,4 +1,7 @@
-package com.andrebystrom.sw2fs;
+package com.andrebystrom.sw2fs.web;
+
+import com.andrebystrom.sw2fs.config.Configuration;
+import com.andrebystrom.sw2fs.config.ConfigurationFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +9,13 @@ import java.nio.file.Files;
 
 public class HTTPResponseCreator
 {
+    private final Configuration configuration;
+
+    public HTTPResponseCreator()
+    {
+        configuration = ConfigurationFactory.getConfiguration();
+    }
+
     public HTTPResponse createResponse(HTTPRequest httpRequest) throws IOException
     {
         var response = new HTTPResponse();
@@ -13,8 +23,7 @@ public class HTTPResponseCreator
         switch(httpRequest.getMethod())
         {
             case GET:
-                System.out.println("GET " + httpRequest.getPath());
-                File f = new File("." + httpRequest.getPath());
+                File f = new File(configuration.getHTTPRootPath(), httpRequest.getPath());
                 response.setResponseStatus(HTTPResponseStatus.OK);
 
                 if(!f.exists())
@@ -30,11 +39,20 @@ public class HTTPResponseCreator
                     for(var file : f.listFiles())
                     {
                         sb.append("<tr>\n");
-                        sb.append("<td>" + "<a href=\"." + file.getPath() + "\">" + file.getName() + "</a></td>");
+                        sb.append("<td>" + "<a href=\"");
+                        sb.append(file.getAbsolutePath().substring(configuration.getHTTPRootPath().length() + 1));
+                        sb.append("\">");
+                        sb.append(file.getName());
+                        sb.append("</a></td>");
                         sb.append("<td>" + file.getTotalSpace() * 10E-6 + "</td>");
                         sb.append("</tr>\n");
                     }
                     sb.append("</table>\n");
+                    sb.append("<a href=\"/");
+                    sb.append(f.getParent().substring(configuration.getHTTPRootPath().length()));
+                    sb.append("\">\n");
+                    sb.append("Back\n");
+                    sb.append("</a>\n");
                     response.setBody(sb.toString());
                 }
                 else if(f.isFile())
@@ -52,13 +70,10 @@ public class HTTPResponseCreator
                 }
                 break;
             case PUT:
-                System.out.println("PUT");
                 break;
             case POST:
-                System.out.println("POST");
                 break;
             case DELETE:
-                System.out.println("DELETE");
                 break;
         }
         return response;

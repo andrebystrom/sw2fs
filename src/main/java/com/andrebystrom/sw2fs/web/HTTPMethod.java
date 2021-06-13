@@ -1,4 +1,4 @@
-package com.andrebystrom.sw2fs;
+package com.andrebystrom.sw2fs.web;
 
 public enum HTTPMethod
 {
