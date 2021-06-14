@@ -43,14 +43,16 @@ public class HTTPServer
      */
     public void run()
     {
-        logger.log("Starting server on " + root.getAbsolutePath());
+        logger.log("Starting server on " + configuration.getHTTPRootPath());
         try
         {
             var serverSocket = new ServerSocket(PORT);
             while(true)
             {
                 var client = serverSocket.accept();
-                new HTTPRequestHandler().handleRequest(client);
+                var handler = new HTTPRequestHandler();
+                var thread = new Thread(() -> handler.handleRequest(client));
+                thread.start();
             }
         }
         catch(IOException ioException)
