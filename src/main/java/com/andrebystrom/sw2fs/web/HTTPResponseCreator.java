@@ -23,7 +23,7 @@ public class HTTPResponseCreator
         switch(httpRequest.getMethod())
         {
             case GET:
-                File f = new File(configuration.getHTTPRootPath(), httpRequest.getPath());
+                File f = new File(makeWebPath(configuration.getHTTPRootPath(), httpRequest.getPath()));
                 response.setResponseStatus(HTTPResponseStatus.OK);
 
                 if(!f.exists())
@@ -40,7 +40,7 @@ public class HTTPResponseCreator
                     {
                         sb.append("<tr>\n");
                         sb.append("<td>" + "<a href=\"");
-                        sb.append(file.getAbsolutePath().substring(configuration.getHTTPRootPath().length() + 1));
+                        sb.append(getWebServerPath(file.getAbsolutePath()));
                         sb.append("\">");
                         sb.append(file.getName());
                         sb.append("</a></td>");
@@ -48,8 +48,8 @@ public class HTTPResponseCreator
                         sb.append("</tr>\n");
                     }
                     sb.append("</table>\n");
-                    sb.append("<a href=\"/");
-                    sb.append(f.getParent().substring(configuration.getHTTPRootPath().length()));
+                    sb.append("<a href=\"");
+                    sb.append(getParentPath(f));
                     sb.append("\">\n");
                     sb.append("Back\n");
                     sb.append("</a>\n");
@@ -77,5 +77,21 @@ public class HTTPResponseCreator
                 break;
         }
         return response;
+    }
+
+    private String makeWebPath(String baseFolder, String requestPath)
+    {
+        return baseFolder + requestPath;
+    }
+
+    private String getWebServerPath(String requestPath)
+    {
+        return requestPath.length() <= configuration.getHTTPRootPath().length() ?
+                "/" : requestPath.substring(configuration.getHTTPRootPath().length());
+    }
+
+    private String getParentPath(File child)
+    {
+        return getWebServerPath(child.getParent());
     }
 }
