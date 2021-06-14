@@ -2,8 +2,18 @@ package com.andrebystrom.sw2fs.web;
 
 import java.text.ParseException;
 
+/**
+ * Parses HTTP requests.
+ */
 public class HTTPRequestParser
 {
+    /**
+     * Parses a HTTP request.
+     *
+     * @param request the HTTP request content.
+     * @return a HTTP request.
+     * @throws ParseException if there's an issue parsing the HTTP request.
+     */
     public HTTPRequest parseRequest(String request) throws ParseException
     {
         HTTPMethod method;

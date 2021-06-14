@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * Multi-threaded HTTP server.
+ */
 public class HTTPServer
 {
     public static final int MAX_CONNECTIONS = 20;
@@ -17,7 +20,13 @@ public class HTTPServer
     private final Logger logger;
     private final Configuration configuration;
 
-    public HTTPServer(File root)
+    /**
+     * Constructs a new HTTP server serving from the root.
+     *
+     * @param root the root to serve from.
+     * @throws IllegalArgumentException if root is null or not a directory.
+     */
+    public HTTPServer(File root) throws IllegalArgumentException
     {
         if(root == null || !root.isDirectory())
         {
@@ -29,6 +38,9 @@ public class HTTPServer
         configuration.setHTTPRootPath(root.getAbsolutePath());
     }
 
+    /**
+     * Starts the HTTP server.
+     */
     public void run()
     {
         logger.log("Starting server on " + root.getAbsolutePath());

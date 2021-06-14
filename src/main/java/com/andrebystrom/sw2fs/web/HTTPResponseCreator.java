@@ -7,15 +7,28 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+/**
+ * Builds and returns an HTTPResponse for a particular request.
+ */
 public class HTTPResponseCreator
 {
     private final Configuration configuration;
 
+    /**
+     * Constructs a new HTTPResponseCreator.
+     */
     public HTTPResponseCreator()
     {
         configuration = ConfigurationFactory.getConfiguration();
     }
 
+    /**
+     * Creates a HTTP response to an HTTP request.
+     *
+     * @param httpRequest the request respond to.
+     * @return the HTTP response.
+     * @throws IOException if there's an issue reading the resource requested.
+     */
     public HTTPResponse createResponse(HTTPRequest httpRequest) throws IOException
     {
         var response = new HTTPResponse();

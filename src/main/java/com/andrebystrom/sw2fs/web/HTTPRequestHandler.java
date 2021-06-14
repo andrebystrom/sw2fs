@@ -7,17 +7,28 @@ import java.io.*;
 import java.net.Socket;
 import java.text.ParseException;
 
+/**
+ * Handles incoming HTTP requests and responds to them.
+ */
 public class HTTPRequestHandler
 {
     private final HTTPRequestParser parser;
     private final Logger logger;
 
+    /**
+     * Constructs a new HTTPRequestHandler.
+     */
     public HTTPRequestHandler()
     {
         this.parser = new HTTPRequestParser();
         this.logger = LoggerFactory.getLogger();
     }
 
+    /**
+     * Handles the incoming HTTP request.
+     *
+     * @param socket the socket containing the incoming HTTP request.
+     */
     public void handleRequest(Socket socket)
     {
         try
