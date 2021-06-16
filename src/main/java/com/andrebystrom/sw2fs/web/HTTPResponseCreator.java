@@ -36,6 +36,7 @@ public class HTTPResponseCreator
         switch(httpRequest.getMethod())
         {
             case GET:
+                System.out.println(makeWebPath(configuration.getHTTPRootPath(), httpRequest.getPath()));
                 File f = new File(makeWebPath(configuration.getHTTPRootPath(), httpRequest.getPath()));
                 response.setResponseStatus(HTTPResponseStatus.OK);
 
@@ -94,17 +95,24 @@ public class HTTPResponseCreator
 
     private String makeWebPath(String baseFolder, String requestPath)
     {
-        return baseFolder + requestPath;
+        return (baseFolder + requestPath).replace("//", "/");
     }
 
     private String getWebServerPath(String requestPath)
     {
         return requestPath.length() <= configuration.getHTTPRootPath().length() ?
-                "/" : requestPath.substring(configuration.getHTTPRootPath().length());
+                "/" : requestPath.substring(configuration.getHTTPRootPath().length() - 1);
     }
 
     private String getParentPath(File child)
     {
-        return getWebServerPath(child.getParent());
+        if(!child.toPath().equals(child.toPath().getRoot()))
+        {
+            return getWebServerPath(child.getParent());
+        }
+        else
+        {
+            return "/";
+        }
     }
 }

@@ -26,7 +26,7 @@ public class Configuration
     {
         if(rootPath.endsWith("/.") && rootPath.length() >= 2)
         {
-            rootPath = rootPath.substring(0, rootPath.length() - 2);
+            rootPath = rootPath.substring(0, rootPath.length() - 1);
         }
         this.HTTPRootPath = rootPath;
     }
