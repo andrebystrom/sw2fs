@@ -6,8 +6,26 @@ package com.andrebystrom.sw2fs.log;
 public interface Logger
 {
     /**
-     * Logs a message.
+     * Logs an ordinary message.
      * @param text the message to log.
      */
-    void log(String text);
+    void logMessage(String text);
+
+    /**
+     * Logs a information message.
+     * @param text the message to log.
+     */
+    void logInformational(String text);
+
+    /**
+     * Logs a warning message.
+     * @param text the message to log.
+     */
+    void logWarning(String text);
+
+    /**
+     * Logs an error message.
+     * @param text the message to log.
+     */
+    void logError(String text);
 }

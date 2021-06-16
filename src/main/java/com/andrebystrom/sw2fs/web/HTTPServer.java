@@ -43,7 +43,7 @@ public class HTTPServer
      */
     public void run()
     {
-        logger.log("Starting server on " + configuration.getHTTPRootPath());
+        logger.logInformational("Starting server on " + configuration.getHTTPRootPath());
         try
         {
             var serverSocket = new ServerSocket(PORT);
@@ -57,7 +57,7 @@ public class HTTPServer
         }
         catch(IOException ioException)
         {
-            logger.log(ioException.getMessage());
+            logger.logError(ioException.getMessage());
         }
     }
 }

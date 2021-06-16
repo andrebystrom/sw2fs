@@ -12,6 +12,7 @@ import java.text.ParseException;
  */
 public class HTTPRequestHandler
 {
+    private static final int MAX_REQUEST_SIZE = 8192;
     private final HTTPRequestParser parser;
     private final Logger logger;
 
@@ -44,11 +45,11 @@ public class HTTPRequestHandler
         }
         catch(IOException ioException)
         {
-            logger.log(ioException.getMessage());
+            logger.logError(ioException.getMessage());
         }
         catch(ParseException parseException)
         {
-            logger.log(parseException.getMessage() + " at line " + parseException.getErrorOffset());
+            logger.logError(parseException.getMessage() + " at line " + parseException.getErrorOffset());
         }
     }
 
@@ -58,7 +59,7 @@ public class HTTPRequestHandler
         String line;
         StringBuilder sb = new StringBuilder();
 
-        while((line = br.readLine()) != null && !line.isBlank())
+        while((line = br.readLine()) != null && !line.isBlank() && sb.length() < MAX_REQUEST_SIZE)
         {
             sb.append(line + "\n");
         }
@@ -75,7 +76,7 @@ public class HTTPRequestHandler
 
     private void logRequestInfo(Socket socket, HTTPRequest httpRequest)
     {
-        logger.log("Received request from "
+        logger.logInformational("Received request from "
                 + socket.getInetAddress()
                 + " " + httpRequest.getMethod()
                 + " for "
