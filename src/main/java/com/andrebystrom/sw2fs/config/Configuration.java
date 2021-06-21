@@ -24,10 +24,6 @@ public class Configuration
      */
     public void setHTTPRootPath(String rootPath)
     {
-        if(rootPath.endsWith("/.") && rootPath.length() >= 2)
-        {
-            rootPath = rootPath.substring(0, rootPath.length() - 1);
-        }
         this.HTTPRootPath = rootPath;
     }
 }

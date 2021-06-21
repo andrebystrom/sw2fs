@@ -13,6 +13,7 @@ import java.nio.file.Files;
 public class HTTPResponseCreator
 {
     private final Configuration configuration;
+    private final HTMLGenerator htmlGenerator;
 
     /**
      * Constructs a new HTTPResponseCreator.
@@ -20,6 +21,7 @@ public class HTTPResponseCreator
     public HTTPResponseCreator()
     {
         configuration = ConfigurationFactory.getConfiguration();
+        htmlGenerator = new HTMLGenerator();
     }
 
     /**
@@ -36,38 +38,17 @@ public class HTTPResponseCreator
         switch(httpRequest.getMethod())
         {
             case GET:
-                System.out.println(makeWebPath(configuration.getHTTPRootPath(), httpRequest.getPath()));
                 File f = new File(makeWebPath(configuration.getHTTPRootPath(), httpRequest.getPath()));
                 response.setResponseStatus(HTTPResponseStatus.OK);
 
                 if(!f.exists())
                 {
                     response.setResponseStatus(HTTPResponseStatus.NOTFOUND);
-                    response.setBody("404 not found!!");
+                    response.setBody(htmlGenerator.getNotFoundResponse());
                 }
                 else if(f.isDirectory())
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("<table>\n");
-                    sb.append("<tr>\n<th>Name</th>\n<th>Size(mb)</th>\n");
-                    for(var file : f.listFiles())
-                    {
-                        sb.append("<tr>\n");
-                        sb.append("<td>" + "<a href=\"");
-                        sb.append(getWebServerPath(file.getAbsolutePath()));
-                        sb.append("\">");
-                        sb.append(file.getName());
-                        sb.append("</a></td>");
-                        sb.append("<td>" + file.getTotalSpace() * 10E-6 + "</td>");
-                        sb.append("</tr>\n");
-                    }
-                    sb.append("</table>\n");
-                    sb.append("<a href=\"");
-                    sb.append(getParentPath(f));
-                    sb.append("\">\n");
-                    sb.append("Back\n");
-                    sb.append("</a>\n");
-                    response.setBody(sb.toString());
+                    response.setBody(htmlGenerator.getDirectoryResponse(f, httpRequest.getPath()));
                 }
                 else if(f.isFile())
                 {
@@ -95,24 +76,6 @@ public class HTTPResponseCreator
 
     private String makeWebPath(String baseFolder, String requestPath)
     {
-        return (baseFolder + requestPath).replace("//", "/");
-    }
-
-    private String getWebServerPath(String requestPath)
-    {
-        return requestPath.length() <= configuration.getHTTPRootPath().length() ?
-                "/" : requestPath.substring(configuration.getHTTPRootPath().length() - 1);
-    }
-
-    private String getParentPath(File child)
-    {
-        if(!child.toPath().equals(child.toPath().getRoot()))
-        {
-            return getWebServerPath(child.getParent());
-        }
-        else
-        {
-            return "/";
-        }
+        return (baseFolder + requestPath.replaceAll(File.separatorChar + "{2,}", "/"));
     }
 }
