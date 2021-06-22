@@ -28,12 +28,12 @@ public class Sw2fs
         }
     }
 
-    public static boolean validateArgs(String[] args)
+    private static boolean validateArgs(String[] args)
     {
         return args.length > 0 && new File(args[0]).isDirectory();
     }
 
-    public static void printUsage()
+    private static void printUsage()
     {
         LoggerFactory.getLogger().logMessage("Usage: sw2fs <path/to/web/root/dir>");
     }
