@@ -36,6 +36,6 @@ public enum HTTPResponseStatus
      */
     public String getFriendlyName()
     {
-        return this.friendlyName + " " + this.status;
+        return this.status + " " + this.friendlyName;
     }
 }
