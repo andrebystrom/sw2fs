@@ -1,8 +1,5 @@
 package com.andrebystrom.sw2fs;
 
-import com.andrebystrom.sw2fs.log.LoggerFactory;
-import com.andrebystrom.sw2fs.web.HTTPServer;
-
 import java.io.*;
 
 /**
@@ -19,8 +16,7 @@ public class Sw2fs
     {
         if(validateArgs(args))
         {
-            var httpServer = new HTTPServer(new File(args[0]));
-            httpServer.run();
+
         }
         else
         {
@@ -35,6 +31,6 @@ public class Sw2fs
 
     private static void printUsage()
     {
-        LoggerFactory.getLogger().logMessage("Usage: sw2fs <path/to/web/root/dir>");
+
     }
 }

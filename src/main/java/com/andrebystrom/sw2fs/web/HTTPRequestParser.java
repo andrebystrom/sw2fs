@@ -1,50 +1,72 @@
 package com.andrebystrom.sw2fs.web;
 
 import java.text.ParseException;
+import java.util.Arrays;
 
-/**
- * Parses HTTP requests.
- */
 public class HTTPRequestParser
 {
-    /**
-     * Parses a HTTP request.
-     *
-     * @param request the HTTP request content.
-     * @return a HTTP request.
-     * @throws ParseException if there's an issue parsing the HTTP request.
-     */
-    public HTTPRequest parseRequest(String request) throws ParseException
+    private static final String NEW_LINE = "\r\n";
+    private HTTPRequest httpRequest;
+
+    public HTTPRequestParser()
     {
-        HTTPMethod method;
-        String path;
-
-        String[] lines = request.split("\n");
-        method = getHTTPMethod(lines[0]);
-        path = getHTTPPath(lines[0]);
-
-        return new HTTPRequest(method, path, null);
+        httpRequest = new HTTPRequest();
     }
 
-    private HTTPMethod getHTTPMethod(String firstLine) throws ParseException
+    public HTTPRequest parse(String request) throws ParseException
     {
-        for(var method : HTTPMethod.values())
+        if(request == null || request.length() < 1)
         {
-            if(firstLine.startsWith(method.name()))
-            {
-                return method;
-            }
+            throw new ParseException("request cannot be null or empty", -1);
         }
-        throw new ParseException("Invalid HTTP request!", 1);
+        String[] requestParts = request.split(NEW_LINE + NEW_LINE);
+        if(requestParts.length < 1)
+        {
+            throw new ParseException("Invalid HTTP request, no header/body separation", -1);
+        }
+        String[] headers = requestParts[0].split(NEW_LINE);
+
+        parseFirstLine(headers[0]);
+        parseHeaders(headers, 1, headers.length);
+
+        httpRequest.setBody(requestParts.length >= 2 ? requestParts[1] : null);
+
+        return this.httpRequest;
     }
 
-    private String getHTTPPath(String firstLine) throws ParseException
+
+    private void parseFirstLine(String firstLine) throws ParseException
     {
         String[] words = firstLine.split(" ");
-        if(words.length < 2)
+        if(words.length != 3)
         {
-            throw new ParseException("Invalid HTTP Request!", 1);
+            throw new ParseException("Invalid first line of HTTP request.", 1);
         }
-        return words[1];
+        httpRequest.setMethod(Arrays.stream(HTTPMethod.values())
+                .filter(method -> words[0].startsWith(method.name()))
+                .findFirst()
+                .orElseThrow(() -> new ParseException("Not a valid HTTP Request method", 1)));
+
+        httpRequest.setPath(words[1]);
+        httpRequest.setVersion(words[2]);
+    }
+
+    private void parseHeaders(String[] headerLines, int start, int end) throws ParseException
+    {
+        final int LINE_OFFSET = start + 1;
+        for(int i = start; i < end; i++)
+        {
+            String[] words = headerLines[i].split(" ");
+            if(words.length != 2)
+            {
+                throw new ParseException("Invalid header length", i + LINE_OFFSET);
+            }
+            words[0] = words[0].replaceAll(":", "");
+            if(words[0].equals(""))
+            {
+                throw new ParseException("Invalid header name", i + LINE_OFFSET);
+            }
+            httpRequest.addHeader(words[0], words[1]);
+        }
     }
 }
