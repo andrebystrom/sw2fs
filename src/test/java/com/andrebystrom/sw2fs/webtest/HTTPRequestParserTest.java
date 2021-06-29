@@ -11,7 +11,7 @@ import java.text.ParseException;
 
 public class HTTPRequestParserTest
 {
-    private static String newLine = "\r\n";
+    private final static String NEW_LINE = "\r\n";
 
     @Test
     void shouldParseFirstLineCorrectly() throws ParseException
@@ -28,9 +28,9 @@ public class HTTPRequestParserTest
     {
         HTTPRequestParser httpRequestParser = new HTTPRequestParser();
         HTTPRequest request = httpRequestParser.parse("GET / HTTP/1.1"
-                + newLine
+                + NEW_LINE
                 + "Connection: local"
-                + newLine
+                + NEW_LINE
                 + "test: yes");
         assertEquals("local", request.getHeader("Connection"));
         assertEquals("yes", request.getHeader("test"));
@@ -41,12 +41,12 @@ public class HTTPRequestParserTest
     {
         HTTPRequestParser httpRequestParser = new HTTPRequestParser();
         HTTPRequest request = httpRequestParser.parse("GET / HTTP/1.1"
-                + newLine
+                + NEW_LINE
                 + "Connection: local"
-                + newLine
+                + NEW_LINE
                 + "test: yes"
-                + newLine
-                + newLine
+                + NEW_LINE
+                + NEW_LINE
                 + "BODY");
         assertEquals("BODY", request.getBody());
     }
@@ -85,14 +85,14 @@ public class HTTPRequestParserTest
     {
         HTTPRequestParser parser = new HTTPRequestParser();
         assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1"
-                + newLine
+                + NEW_LINE
                 + "conn:"
-                + newLine
+                + NEW_LINE
                 + "test: yes"));
         assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1"
-                + newLine
+                + NEW_LINE
                 + "conn: yes no"
-                + newLine
+                + NEW_LINE
                 + "test: yes"));
     }
 
@@ -100,14 +100,14 @@ public class HTTPRequestParserTest
     void shouldThrowWhenHeaderNameIsEmpty()
     {
         HTTPRequestParser parser = new HTTPRequestParser();
-        assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1" + newLine + ": val"));
+        assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1" + NEW_LINE + ": val"));
     }
 
     @Test
     void shouldThrowWhenHeaderValIsEmpty()
     {
         HTTPRequestParser parser = new HTTPRequestParser();
-        assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1" + newLine + "name: "));
+        assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1" + NEW_LINE + "name: "));
     }
 
     @Test
