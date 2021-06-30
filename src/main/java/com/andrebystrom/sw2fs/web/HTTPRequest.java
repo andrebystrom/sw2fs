@@ -45,9 +45,9 @@ public class HTTPRequest
         this.version = version;
     }
 
-    public String getHeader(String connection)
+    public String getHeader(String name)
     {
-        return this.headers.get(connection);
+        return this.headers.get(name);
     }
 
     public void addHeader(String name, String val)
