@@ -8,8 +8,6 @@ import java.io.IOException;
 public class HTTPServer
 {
     private final IServerSocketWrapper serverSocket;
-    private Thread serverThread;
-    private boolean isRunning;
 
     public HTTPServer(IServerSocketWrapper serverSocket)
     {
@@ -18,33 +16,7 @@ public class HTTPServer
 
     public void start()
     {
-        this.serverThread = new Thread(() -> this.run());
-        this.serverThread.start();
-        this.isRunning = true;
-    }
-
-    public boolean isRunning()
-    {
-        return this.isRunning;
-    }
-
-    public void stop()
-    {
-        this.isRunning = false;
-        try
-        {
-            this.serverThread.join();
-        }
-        catch(InterruptedException interruptedException)
-        {
-            interruptedException.printStackTrace();
-        }
-
-    }
-
-    private void run()
-    {
-        while(isRunning)
+        while(true)
         {
             try
             {
