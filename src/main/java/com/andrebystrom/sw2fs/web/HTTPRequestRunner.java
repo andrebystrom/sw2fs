@@ -14,13 +14,16 @@ public class HTTPRequestRunner implements Runnable
     private HTTPRequest request;
     private HTTPResponse response;
     private IFileWrapper file;
-    private int bytesRead;
+    private final HTTPRequestReader reader;
+    private final HTTPRequestWriter writer;
 
     public HTTPRequestRunner(ISocketWrapper socketWrapper, HTTPRequestParser parser, IFileWrapper file)
     {
         this.socketWrapper = socketWrapper;
         this.parser = parser;
         this.file = file;
+        this.reader = new HTTPRequestReader();
+        this.writer = new HTTPRequestWriter();
     }
 
     @Override
@@ -28,16 +31,17 @@ public class HTTPRequestRunner implements Runnable
     {
         try
         {
-            String headers = readHeaders();
+            String headers = this.reader.readHeaders(this.socketWrapper.getInputStream());
             this.request = this.parser.parse(headers);
             String contentLength = this.request.getHeader("content-length");
             if(contentLength != null)
             {
-                this.request.setBody(readBody(Integer.parseInt(contentLength.trim())));
+                this.request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
+                        Integer.parseInt(contentLength.trim())));
             }
             this.file.setFile(this.request.getPath());
             this.response = new HTTPResponseBuilder(this.file).buildResponse(this.request);
-            this.writeResponse();
+            this.writer.write(response, socketWrapper.getOutputStream());
             this.socketWrapper.close();
         }
         catch(ParseException parseException)
@@ -52,48 +56,6 @@ public class HTTPRequestRunner implements Runnable
         {
             numberFormatException.printStackTrace();
         }
-    }
-
-    private String readHeaders() throws ParseException, IOException
-    {
-        final int UNREAD_LINE_SIZE = 2;
-        BufferedReader br = new BufferedReader(new InputStreamReader(this.socketWrapper.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while((line = br.readLine()) != null && !line.isBlank())
-        {
-            sb.append(line);
-            sb.append("\r\n");
-        }
-        String headers = sb.toString();
-        bytesRead += headers.getBytes().length + UNREAD_LINE_SIZE;
-        return headers;
-    }
-
-    private String readBody(int size) throws IOException
-    {
-        InputStreamReader reader = new InputStreamReader(this.socketWrapper.getInputStream());
-        reader.skip(this.bytesRead);
-        int[] body = new int[size];
-        StringBuilder sb = new StringBuilder();
-
-        for(int i = 0; i < body.length; i++)
-        {
-            int readChar = reader.read();
-            if(readChar == -1)
-            {
-                break;
-            }
-            sb.append(Character.toChars(readChar));
-        }
-        return sb.toString();
-    }
-
-    private void writeResponse() throws IOException
-    {
-        BufferedWriter br = new BufferedWriter(new OutputStreamWriter(this.socketWrapper.getOutputStream()));
-        br.write(this.response.getResponseMessage());
-        br.flush();
     }
 
     public HTTPRequest getHTTPRequest()
