@@ -7,8 +7,8 @@ import java.util.List;
 
 public class HTTPResponseBuilder
 {
-    private IFileWrapper fileWrapper;
-    private HTTPResponse response;
+    private final IFileWrapper fileWrapper;
+    private final HTTPResponse response;
 
     public HTTPResponseBuilder(IFileWrapper fileWrapper)
     {

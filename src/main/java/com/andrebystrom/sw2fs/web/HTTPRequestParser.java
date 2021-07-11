@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class HTTPRequestParser
 {
     private static final String NEW_LINE = "\r\n";
-    private HTTPRequest httpRequest;
+    private final HTTPRequest httpRequest;
 
     public HTTPRequestParser()
     {
