@@ -17,12 +17,6 @@ public class FileWrapper implements IFileWrapper
     }
 
     @Override
-    public void setFile(String path)
-    {
-        this.file = new File(path);
-    }
-
-    @Override
     public boolean exists()
     {
         return file.exists();

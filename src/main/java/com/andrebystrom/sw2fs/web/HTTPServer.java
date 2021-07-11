@@ -1,6 +1,5 @@
 package com.andrebystrom.sw2fs.web;
 
-import com.andrebystrom.sw2fs.file.FileWrapper;
 import com.andrebystrom.sw2fs.socket.IServerSocketWrapper;
 import com.andrebystrom.sw2fs.socket.ISocketWrapper;
 
@@ -50,7 +49,7 @@ public class HTTPServer
             try
             {
                 ISocketWrapper client = this.serverSocket.accept();
-                HTTPRequestRunner runner = new HTTPRequestRunner(client, new HTTPRequestParser(), new FileWrapper("/"));
+                HTTPRequestRunner runner = new HTTPRequestRunner(client, new HTTPRequestParser());
                 Thread t = new Thread(runner);
                 t.start();
             }

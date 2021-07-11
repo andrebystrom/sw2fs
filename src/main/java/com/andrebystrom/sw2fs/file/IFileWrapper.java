@@ -5,7 +5,6 @@ import java.util.List;
 
 public interface IFileWrapper
 {
-    void setFile(String path);
     boolean exists();
     boolean isFile();
     boolean isDirectory();
