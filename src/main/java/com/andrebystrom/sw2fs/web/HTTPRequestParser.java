@@ -57,7 +57,7 @@ public class HTTPRequestParser
         for(int i = start; i < end; i++)
         {
             String[] words = headerLines[i].split(" ");
-            if(words.length != 2)
+            if(words.length < 2)
             {
                 throw new ParseException("Invalid header length", i + LINE_OFFSET);
             }

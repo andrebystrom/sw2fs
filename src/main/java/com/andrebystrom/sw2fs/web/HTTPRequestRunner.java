@@ -1,10 +1,10 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.file.FileWrapper;
+import com.andrebystrom.sw2fs.file.IFileWrapper;
 import com.andrebystrom.sw2fs.socket.ISocketWrapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
 
 public class HTTPRequestRunner implements Runnable
@@ -12,11 +12,15 @@ public class HTTPRequestRunner implements Runnable
     private final ISocketWrapper socketWrapper;
     private final HTTPRequestParser parser;
     private HTTPRequest request;
+    private HTTPResponse response;
+    private IFileWrapper file;
+    private int bytesRead;
 
-    public HTTPRequestRunner(ISocketWrapper socketWrapper, HTTPRequestParser parser)
+    public HTTPRequestRunner(ISocketWrapper socketWrapper, HTTPRequestParser parser, IFileWrapper file)
     {
         this.socketWrapper = socketWrapper;
         this.parser = parser;
+        this.file = file;
     }
 
     @Override
@@ -31,6 +35,10 @@ public class HTTPRequestRunner implements Runnable
             {
                 this.request.setBody(readBody(Integer.parseInt(contentLength.trim())));
             }
+            this.file.setFile(this.request.getPath());
+            this.response = new HTTPResponseBuilder(this.file).buildResponse(this.request);
+            this.writeResponse();
+            this.socketWrapper.close();
         }
         catch(ParseException parseException)
         {
@@ -48,26 +56,53 @@ public class HTTPRequestRunner implements Runnable
 
     private String readHeaders() throws ParseException, IOException
     {
+        final int UNREAD_LINE_SIZE = 2;
         BufferedReader br = new BufferedReader(new InputStreamReader(this.socketWrapper.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String line;
-        while((line = br.readLine()) != "")
+        while((line = br.readLine()) != null && !line.isBlank())
         {
             sb.append(line);
             sb.append("\r\n");
         }
-        return sb.toString();
+        String headers = sb.toString();
+        bytesRead += headers.getBytes().length + UNREAD_LINE_SIZE;
+        return headers;
     }
 
     private String readBody(int size) throws IOException
     {
+        InputStreamReader reader = new InputStreamReader(this.socketWrapper.getInputStream());
+        reader.skip(this.bytesRead);
         int[] body = new int[size];
         StringBuilder sb = new StringBuilder();
-        InputStreamReader reader = new InputStreamReader(this.socketWrapper.getInputStream());
+
         for(int i = 0; i < body.length; i++)
         {
-            sb.append(Character.toChars(reader.read()));
+            int readChar = reader.read();
+            if(readChar == -1)
+            {
+                break;
+            }
+            sb.append(Character.toChars(readChar));
         }
         return sb.toString();
+    }
+
+    private void writeResponse() throws IOException
+    {
+        BufferedWriter br = new BufferedWriter(new OutputStreamWriter(this.socketWrapper.getOutputStream()));
+        br.write(this.response.getResponseMessage());
+        br.flush();
+    }
+
+    public HTTPRequest getHTTPRequest()
+    {
+        return this.request;
+    }
+
+    public HTTPResponse getHTTPResponse()
+    {
+        return this.response;
     }
 }

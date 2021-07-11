@@ -17,6 +17,12 @@ public class FileWrapper implements IFileWrapper
     }
 
     @Override
+    public void setFile(String path)
+    {
+        this.file = new File(path);
+    }
+
+    @Override
     public boolean exists()
     {
         return file.exists();
@@ -58,7 +64,7 @@ public class FileWrapper implements IFileWrapper
         ArrayList<IFileWrapper> fileWrappers = new ArrayList<>();
         for(File f : file.listFiles())
         {
-            fileWrappers.add(new FileWrapper(file.getAbsolutePath()));
+            fileWrappers.add(new FileWrapper(f.getAbsolutePath()));
         }
         return fileWrappers;
     }

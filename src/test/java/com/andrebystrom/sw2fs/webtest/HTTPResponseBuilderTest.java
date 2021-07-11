@@ -71,6 +71,13 @@ public class HTTPResponseBuilderTest
     {
         return new IFileWrapper()
         {
+            private String path;
+            @Override
+            public void setFile(String path)
+            {
+                this.path = path;
+            }
+
             @Override
             public boolean exists()
             {
@@ -92,13 +99,13 @@ public class HTTPResponseBuilderTest
             @Override
             public String getAbsolutePath()
             {
-                return "/web/file.txt";
+                return path == null ? "/web/file.txt" : this.path;
             }
 
             @Override
             public String getName()
             {
-                return "file.txt";
+                return path == null ? "file.txt" : this.path;
             }
 
             @Override
@@ -119,6 +126,12 @@ public class HTTPResponseBuilderTest
     {
         return new IFileWrapper()
         {
+            @Override
+            public void setFile(String path)
+            {
+
+            }
+
             @Override
             public boolean exists()
             {
@@ -167,6 +180,13 @@ public class HTTPResponseBuilderTest
     {
         return new IFileWrapper()
         {
+            private String path;
+            @Override
+            public void setFile(String path)
+            {
+                this.path = path;
+            }
+
             @Override
             public boolean exists()
             {
@@ -188,13 +208,13 @@ public class HTTPResponseBuilderTest
             @Override
             public String getAbsolutePath()
             {
-                return "/web/file/";
+                return this.path == null ? "/web/file/" : this.path;
             }
 
             @Override
             public String getName()
             {
-                return "file";
+                return this.path == null ? "/web/file/" : this.path;
             }
 
             @Override
