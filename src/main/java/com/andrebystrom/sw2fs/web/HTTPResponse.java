@@ -2,73 +2,79 @@ package com.andrebystrom.sw2fs.web;
 
 import java.util.HashMap;
 
-/**
- * Represents an HTTP response.
- */
 public class HTTPResponse
 {
-    private String firstLine;
+    private String version;
+    private HTTPResponseStatus status;
     private final HashMap<String, String> headers;
     private String body;
+    private static final String NEW_LINE = "\r\n";
 
-    /**
-     * Constructs a new HTTP response.
-     */
     public HTTPResponse()
     {
-        headers = new HashMap<>();
+        this.headers = new HashMap<>();
     }
 
-    /**
-     * Sets the HTTP response status.
-     *
-     * @param statusCode
-     */
-    public void setResponseStatus(HTTPResponseStatus statusCode)
+    public void setVersion(String version)
     {
-        firstLine = "HTTP/1.0 " + statusCode.getFriendlyName();
+        this.version = version;
     }
 
-    /**
-     * Adds headers to the HTTP response.
-     *
-     * @param name  the name of the header.
-     * @param value the value of the header.
-     */
-    public void addHeaders(String name, String value)
+    public String getVersion()
     {
-        headers.put(name, value);
+        return this.version;
     }
 
-    /**
-     * Set the body of the HTTP response.
-     *
-     * @param body the body of the HTTP response.
-     */
+    public void setStatus(HTTPResponseStatus status)
+    {
+        this.status = status;
+    }
+
+    public HTTPResponseStatus getStatus()
+    {
+        return this.status;
+    }
+
+    public void addHeader(String name, String val)
+    {
+        this.headers.put(name, val);
+    }
+
+    public String getHeader(String name)
+    {
+        return this.headers.get(name);
+    }
+
     public void setBody(String body)
     {
         this.body = body;
     }
 
-    /**
-     * Returns a String representation of the HTTP response that's formatted as a valid HTTP response.
-     *
-     * @return a String representation of the HTTP response.
-     */
-    @Override
-    public String toString()
+    public String getBody()
+    {
+        return this.body;
+    }
+
+    public String getResponseMessage()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.firstLine + "\r\n");
-        for(String k : headers.keySet())
+        sb.append(this.version);
+        sb.append(" ");
+        sb.append(this.status.getFriendlyName());
+        sb.append(NEW_LINE);
+        for(String key : headers.keySet())
         {
-            sb.append(k + ": " + headers.get(k) + "\r\n");
+            sb.append(key);
+            sb.append(": ");
+            sb.append(this.headers.get(key));
+            sb.append(NEW_LINE);
         }
-        sb.append("\r\n");
-        if(body != null)
+        sb.append(NEW_LINE);
+        if(this.body != null)
         {
-            sb.append(body);
+            sb.append(this.body);
         }
+
         return sb.toString();
     }
 }

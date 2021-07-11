@@ -1,63 +1,63 @@
 package com.andrebystrom.sw2fs.web;
 
-import com.andrebystrom.sw2fs.config.Configuration;
-import com.andrebystrom.sw2fs.config.ConfigurationFactory;
-import com.andrebystrom.sw2fs.log.Logger;
-import com.andrebystrom.sw2fs.log.LoggerFactory;
+import com.andrebystrom.sw2fs.file.FileWrapper;
+import com.andrebystrom.sw2fs.socket.IServerSocketWrapper;
+import com.andrebystrom.sw2fs.socket.ISocketWrapper;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 
-/**
- * Multi-threaded HTTP server.
- */
 public class HTTPServer
 {
-    public static final int MAX_CONNECTIONS = 20;
-    public static final int PORT = 8080;
-    private final File root;
-    private final Logger logger;
-    private final Configuration configuration;
+    private final IServerSocketWrapper serverSocket;
+    private Thread serverThread;
+    private boolean isRunning;
 
-    /**
-     * Constructs a new HTTP server serving from the root.
-     *
-     * @param root the root to serve from.
-     * @throws IllegalArgumentException if root is null or not a directory.
-     */
-    public HTTPServer(File root) throws IllegalArgumentException
+    public HTTPServer(IServerSocketWrapper serverSocket)
     {
-        if(root == null || !root.isDirectory())
-        {
-            throw new IllegalArgumentException("Web server root cannot be null or not a directory.");
-        }
-        this.root = root;
-        this.logger = LoggerFactory.getLogger();
-        this.configuration = ConfigurationFactory.getConfiguration();
-        configuration.setHTTPRootPath(root.getAbsolutePath());
+        this.serverSocket = serverSocket;
     }
 
-    /**
-     * Starts the HTTP server.
-     */
-    public void run()
+    public void start()
     {
-        logger.logInformational("Starting server on " + configuration.getHTTPRootPath());
+        this.serverThread = new Thread(() -> this.run());
+        this.serverThread.start();
+        this.isRunning = true;
+    }
+
+    public boolean isRunning()
+    {
+        return this.isRunning;
+    }
+
+    public void stop()
+    {
+        this.isRunning = false;
         try
         {
-            var serverSocket = new ServerSocket(PORT);
-            while(true)
-            {
-                var client = serverSocket.accept();
-                var handler = new HTTPRequestHandler();
-                var thread = new Thread(() -> handler.handleRequest(client));
-                thread.start();
-            }
+            this.serverThread.join();
         }
-        catch(IOException ioException)
+        catch(InterruptedException interruptedException)
         {
-            logger.logError(ioException.getMessage());
+            interruptedException.printStackTrace();
+        }
+
+    }
+
+    private void run()
+    {
+        while(isRunning)
+        {
+            try
+            {
+                ISocketWrapper client = this.serverSocket.accept();
+                HTTPRequestRunner runner = new HTTPRequestRunner(client, new HTTPRequestParser(), new FileWrapper("/"));
+                Thread t = new Thread(runner);
+                t.start();
+            }
+            catch(IOException ioException)
+            {
+                ioException.printStackTrace();
+            }
         }
     }
 }
