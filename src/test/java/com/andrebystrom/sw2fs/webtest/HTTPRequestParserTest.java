@@ -81,17 +81,12 @@ public class HTTPRequestParserTest
     }
 
     @Test
-    void shouldThrowWhenHeadersAreToLongOrShort()
+    void shouldThrowWhenHeadersAreToShort()
     {
         HTTPRequestParser parser = new HTTPRequestParser();
         assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1"
                 + NEW_LINE
                 + "conn:"
-                + NEW_LINE
-                + "test: yes"));
-        assertThrows(ParseException.class, () -> parser.parse("GET / HTTP/1.1"
-                + NEW_LINE
-                + "conn: yes no"
                 + NEW_LINE
                 + "test: yes"));
     }
