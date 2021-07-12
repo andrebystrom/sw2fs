@@ -14,11 +14,13 @@ public class HTTPRequestRunner implements Runnable
     private HTTPResponse response;
     private final HTTPRequestReader reader;
     private final HTTPRequestWriter writer;
+    private final String root;
 
-    public HTTPRequestRunner(ISocketWrapper socketWrapper, HTTPRequestParser parser)
+    public HTTPRequestRunner(ISocketWrapper socketWrapper, HTTPRequestParser parser, String root)
     {
         this.socketWrapper = socketWrapper;
         this.parser = parser;
+        this.root = root;
         this.reader = new HTTPRequestReader();
         this.writer = new HTTPRequestWriter();
     }
@@ -36,7 +38,8 @@ public class HTTPRequestRunner implements Runnable
                 this.request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
                         Integer.parseInt(contentLength.trim())));
             }
-            this.response = new HTTPResponseBuilder(new FileWrapper(this.request.getPath()))
+            System.out.println(this.root + this.request.getPath());
+            this.response = new HTTPResponseBuilder(new FileWrapper(this.root + this.request.getPath()))
                     .buildResponse(this.request);
             this.writer.write(response, socketWrapper.getOutputStream());
             this.socketWrapper.close();

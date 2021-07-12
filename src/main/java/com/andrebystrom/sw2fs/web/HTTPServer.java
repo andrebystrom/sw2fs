@@ -8,10 +8,11 @@ import java.io.IOException;
 public class HTTPServer
 {
     private final IServerSocketWrapper serverSocket;
-
-    public HTTPServer(IServerSocketWrapper serverSocket)
+    private final String root;
+    public HTTPServer(IServerSocketWrapper serverSocket, String root)
     {
         this.serverSocket = serverSocket;
+        this.root = root;
     }
 
     public void start()
@@ -21,7 +22,7 @@ public class HTTPServer
             try
             {
                 ISocketWrapper client = this.serverSocket.accept();
-                HTTPRequestRunner runner = new HTTPRequestRunner(client, new HTTPRequestParser());
+                HTTPRequestRunner runner = new HTTPRequestRunner(client, new HTTPRequestParser(), this.root);
                 Thread t = new Thread(runner);
                 t.start();
             }

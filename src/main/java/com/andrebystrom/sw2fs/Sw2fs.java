@@ -19,7 +19,7 @@ public class Sw2fs
     {
         if(validateArgs(args))
         {
-            HTTPServer server = new HTTPServer(new ServerSocketWrapper(8080));
+            HTTPServer server = new HTTPServer(new ServerSocketWrapper(8080), trimRoot(args[0]));
             server.start();
         }
         else
@@ -33,8 +33,23 @@ public class Sw2fs
         return args.length > 0 && new File(args[0]).isDirectory();
     }
 
+    private static String trimRoot(String root)
+    {
+        System.out.println(root);
+        if(root.endsWith("."))
+        {
+            root = root.substring(0, root.length() - 1);
+        }
+        if(root.endsWith(File.separator))
+        {
+            root = root.substring(0, root.length() - 1);
+        }
+        System.out.println(root);
+        return root;
+    }
+
     private static void printUsage()
     {
-
+        System.out.println("Usage: Sw2fs <web/root/dir>");
     }
 }
