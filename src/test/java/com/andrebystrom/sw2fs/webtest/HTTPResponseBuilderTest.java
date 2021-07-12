@@ -44,11 +44,11 @@ public class HTTPResponseBuilderTest
         HTTPRequest request = new HTTPRequest();
         request.setMethod(HTTPMethod.GET);
         request.setVersion("HTTP/1.0");
-        request.setPath("/file/");
+        request.setPath("/web/file/");
 
         HTTPResponseBuilder builder = new HTTPResponseBuilder(wrapper);
         HTTPResponse response = builder.buildResponse(request);
-        assertEquals("HTTP/1.0 200 OK\r\n\r\n<p>file.txt</p>",
+        assertEquals("HTTP/1.0 200 OK\r\n\r\n<p><a href=\"/web/file/file.txt\">file.txt</a></p>",
                 response.getResponseMessage());
     }
 
@@ -92,7 +92,7 @@ public class HTTPResponseBuilderTest
             @Override
             public String getAbsolutePath()
             {
-                return "/web/file.txt";
+                return "/web/file/file.txt";
             }
 
             @Override

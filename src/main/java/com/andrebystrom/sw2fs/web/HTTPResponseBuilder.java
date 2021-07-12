@@ -54,9 +54,16 @@ public class HTTPResponseBuilder
                     List<IFileWrapper> fileWrappers = fileWrapper.getDirectories();
                     for(int i = 0; i < fileWrappers.size(); i++)
                     {
-                        sb.append("<p>");
+                        sb.append("<p><a href=\"");
+                        sb.append(request.getPath());
+                        if(!request.getPath().endsWith("/"))
+                        {
+                            sb.append("/");
+                        }
                         sb.append(fileWrappers.get(i).getName());
-                        sb.append("</p>");
+                        sb.append("\">");
+                        sb.append(fileWrappers.get(i).getName());
+                        sb.append("</a></p>");
                         if(i != fileWrappers.size() - 1)
                         {
                             sb.append("\n");
