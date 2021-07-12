@@ -44,7 +44,6 @@ public class Sw2fs
         {
             root = root.substring(0, root.length() - 1);
         }
-        System.out.println(root);
         return root;
     }
 

@@ -38,7 +38,6 @@ public class HTTPRequestRunner implements Runnable
                 this.request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
                         Integer.parseInt(contentLength.trim())));
             }
-            System.out.println(this.root + this.request.getPath());
             this.response = new HTTPResponseBuilder(new FileWrapper(this.root + this.request.getPath()))
                     .buildResponse(this.request);
             this.writer.write(response, socketWrapper.getOutputStream());
