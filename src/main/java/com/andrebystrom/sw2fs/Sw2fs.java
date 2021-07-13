@@ -36,7 +36,6 @@ public class Sw2fs
 
     private static String trimRoot(String root)
     {
-        System.out.println(root);
         if(root.endsWith("."))
         {
             root = root.substring(0, root.length() - 1);
@@ -50,6 +49,6 @@ public class Sw2fs
 
     private static void printUsage()
     {
-        System.out.println("Usage: Sw2fs <web/root/dir>");
+        Factory.getLogger().logMessage("Usage: Sw2fs <web/root/dir>");
     }
 }
