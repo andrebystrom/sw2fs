@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 
 public class HTTPRequestWriter
 {
-    public void write(HTTPResponse response, OutputStream outputStream) throws IOException
+    public void write(Response response, OutputStream outputStream) throws IOException
     {
         BufferedWriter br = new BufferedWriter(new OutputStreamWriter(outputStream));
         br.write(response.getResponseMessage());

@@ -7,21 +7,20 @@ import java.util.List;
 
 public class HTTPResponseBuilder
 {
-    private final IFileWrapper fileWrapper;
-    private final HTTPResponse response;
+    private final Response response;
 
-    public HTTPResponseBuilder(IFileWrapper fileWrapper)
+    public HTTPResponseBuilder(Response response)
     {
-        this.fileWrapper = fileWrapper;
-        this.response = new HTTPResponse();
+        this.response = response;
         this.response.setVersion("HTTP/1.0");
     }
 
-    public HTTPResponse buildResponse(HTTPRequest request) throws IllegalArgumentException, IOException
+    public Response buildResponse(HTTPRequest request, IFileWrapper fileWrapper)
+            throws IllegalArgumentException, IOException
     {
-        if(request == null)
+        if(request == null || fileWrapper == null)
         {
-            throw new IllegalArgumentException("request cannot be null");
+            throw new IllegalArgumentException("request or file cannot be null");
         }
 
         switch(request.getMethod())

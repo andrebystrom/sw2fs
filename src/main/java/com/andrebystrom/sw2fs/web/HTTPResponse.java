@@ -2,7 +2,7 @@ package com.andrebystrom.sw2fs.web;
 
 import java.util.HashMap;
 
-public class HTTPResponse
+public class HTTPResponse implements Response
 {
     private String version;
     private HTTPResponseStatus status;
@@ -15,46 +15,55 @@ public class HTTPResponse
         this.headers = new HashMap<>();
     }
 
+    @Override
     public void setVersion(String version)
     {
         this.version = version;
     }
 
+    @Override
     public String getVersion()
     {
         return this.version;
     }
 
+    @Override
     public void setStatus(HTTPResponseStatus status)
     {
         this.status = status;
     }
 
+    @Override
     public HTTPResponseStatus getStatus()
     {
         return this.status;
     }
 
+    @Override
     public void addHeader(String name, String val)
     {
         this.headers.put(name, val);
     }
 
+    @Override
     public String getHeader(String name)
     {
         return this.headers.get(name);
     }
 
+    @Override
     public void setBody(String body)
     {
         this.body = body;
     }
 
+    @Override
     public String getBody()
     {
         return this.body;
     }
 
+    @Override
     public String getResponseMessage()
     {
         StringBuilder sb = new StringBuilder();

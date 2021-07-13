@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.andrebystrom.sw2fs.web.HTTPRequestWriter;
 import com.andrebystrom.sw2fs.web.HTTPResponse;
 import com.andrebystrom.sw2fs.web.HTTPResponseStatus;
+import com.andrebystrom.sw2fs.web.Response;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -17,7 +18,7 @@ public class HTTPRequestWriterTest
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         HTTPRequestWriter writer = new HTTPRequestWriter();
-        HTTPResponse response = new HTTPResponse();
+        Response response = new HTTPResponse();
         response.setVersion("HTTP/1.0");
         response.setStatus(HTTPResponseStatus.OK);
         response.addHeader("connection", "local");

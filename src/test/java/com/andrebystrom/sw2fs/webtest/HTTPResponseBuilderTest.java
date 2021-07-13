@@ -3,10 +3,7 @@ package com.andrebystrom.sw2fs.webtest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.andrebystrom.sw2fs.file.IFileWrapper;
-import com.andrebystrom.sw2fs.web.HTTPMethod;
-import com.andrebystrom.sw2fs.web.HTTPRequest;
-import com.andrebystrom.sw2fs.web.HTTPResponse;
-import com.andrebystrom.sw2fs.web.HTTPResponseBuilder;
+import com.andrebystrom.sw2fs.web.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,9 +14,8 @@ public class HTTPResponseBuilderTest
     @Test
     void shouldThrowWhenHTTPRequestIsNull()
     {
-        IFileWrapper fileWrapper = getValidMockFile();
-        HTTPResponseBuilder responseBuilder = new HTTPResponseBuilder(fileWrapper);
-        assertThrows(IllegalArgumentException.class, () -> responseBuilder.buildResponse(null));
+        HTTPResponseBuilder responseBuilder = new HTTPResponseBuilder(new HTTPResponse());
+        assertThrows(IllegalArgumentException.class, () -> responseBuilder.buildResponse(null, null));
     }
 
     @Test
@@ -31,8 +27,8 @@ public class HTTPResponseBuilderTest
         request.setVersion("HTTP/1.0");
         request.setPath("/file.txt/");
 
-        HTTPResponseBuilder builder = new HTTPResponseBuilder(wrapper);
-        HTTPResponse response = builder.buildResponse(request);
+        HTTPResponseBuilder builder = new HTTPResponseBuilder(new HTTPResponse());
+        Response response = builder.buildResponse(request, wrapper);
         assertEquals("HTTP/1.0 200 OK\r\ncontent-type: application/octet-stream\r\n\r\nthis\nis\na\nfile",
                 response.getResponseMessage());
     }
@@ -46,8 +42,8 @@ public class HTTPResponseBuilderTest
         request.setVersion("HTTP/1.0");
         request.setPath("/web/file/");
 
-        HTTPResponseBuilder builder = new HTTPResponseBuilder(wrapper);
-        HTTPResponse response = builder.buildResponse(request);
+        HTTPResponseBuilder builder = new HTTPResponseBuilder(new HTTPResponse());
+        Response response = builder.buildResponse(request, wrapper);
         assertEquals("HTTP/1.0 200 OK\r\n\r\n<p><a href=\"/web/file/file.txt\">file.txt</a></p>",
                 response.getResponseMessage());
     }
@@ -61,8 +57,8 @@ public class HTTPResponseBuilderTest
         request.setVersion("HTTP/1.0");
         request.setPath("/file/fail.txt");
 
-        HTTPResponseBuilder builder = new HTTPResponseBuilder(wrapper);
-        HTTPResponse response = builder.buildResponse(request);
+        HTTPResponseBuilder builder = new HTTPResponseBuilder(new HTTPResponse());
+        Response response = builder.buildResponse(request, wrapper);
         assertEquals("HTTP/1.0 404 Not Found\r\n\r\n404 not found",
                 response.getResponseMessage());
     }
