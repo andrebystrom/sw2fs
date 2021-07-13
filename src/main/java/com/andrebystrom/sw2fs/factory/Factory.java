@@ -1,5 +1,7 @@
 package com.andrebystrom.sw2fs.factory;
 
+import com.andrebystrom.sw2fs.log.ConsoleLogger;
+import com.andrebystrom.sw2fs.log.Logger;
 import com.andrebystrom.sw2fs.web.*;
 import com.andrebystrom.sw2fs.web.interfaces.*;
 
@@ -33,5 +35,10 @@ public class Factory
     public static RequestWriter getRequestWriter()
     {
         return new HTTPRequestWriter();
+    }
+
+    public static Logger getLogger()
+    {
+        return new ConsoleLogger();
     }
 }

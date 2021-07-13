@@ -1,6 +1,7 @@
 package com.andrebystrom.sw2fs.web;
 
 import com.andrebystrom.sw2fs.file.FileWrapper;
+import com.andrebystrom.sw2fs.log.Logger;
 import com.andrebystrom.sw2fs.socket.ISocketWrapper;
 import com.andrebystrom.sw2fs.web.interfaces.*;
 
@@ -16,6 +17,7 @@ public class HTTPRequestRunner implements Runnable
     private final RequestReader reader;
     private final RequestWriter writer;
     private final ResponseBuilder builder;
+    private final Logger logger;
     private final String root;
 
     public HTTPRequestRunner(ISocketWrapper socketWrapper,
@@ -23,14 +25,16 @@ public class HTTPRequestRunner implements Runnable
                              RequestReader reader,
                              RequestWriter writer,
                              ResponseBuilder builder,
+                             Logger logger,
                              String root)
     {
         this.socketWrapper = socketWrapper;
         this.parser = parser;
-        this.root = root;
         this.reader = reader;
         this.writer = writer;
         this.builder = builder;
+        this.logger = logger;
+        this.root = root;
     }
 
     @Override
@@ -40,6 +44,7 @@ public class HTTPRequestRunner implements Runnable
         {
             String headers = this.reader.readHeaders(this.socketWrapper.getInputStream());
             this.request = this.parser.parse(headers);
+            this.logger.logMessage("Received request for " + this.request.getPath());
             String contentLength = this.request.getHeader("content-length");
             if(contentLength != null)
             {
@@ -53,15 +58,15 @@ public class HTTPRequestRunner implements Runnable
         }
         catch(ParseException parseException)
         {
-            parseException.printStackTrace();
+            this.logger.logError("Failed to parse request: " + parseException.getMessage());
         }
         catch(IOException ioException)
         {
-            ioException.printStackTrace();
+            this.logger.logError("Connection error: " + ioException.getMessage());
         }
         catch(NumberFormatException numberFormatException)
         {
-            numberFormatException.printStackTrace();
+            this.logger.logError("Failed to get content-length from request.");
         }
     }
 }

@@ -29,6 +29,7 @@ public class HTTPServer
                         Factory.getRequestReader(),
                         Factory.getRequestWriter(),
                         Factory.getResponseBuilder(),
+                        Factory.getLogger(),
                         root);
                 executorService.execute(runner);
             }
