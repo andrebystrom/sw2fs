@@ -1,5 +1,6 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.factory.Factory;
 import com.andrebystrom.sw2fs.socket.IServerSocketWrapper;
 import com.andrebystrom.sw2fs.socket.ISocketWrapper;
 
@@ -10,24 +11,25 @@ import java.util.concurrent.Executors;
 public class HTTPServer
 {
     public static final int MAX_THREADS = 20;
-    private final IServerSocketWrapper serverSocket;
-    private final String root;
     private final ExecutorService executorService;
-    public HTTPServer(IServerSocketWrapper serverSocket, String root)
+    public HTTPServer()
     {
-        this.serverSocket = serverSocket;
-        this.root = root;
         this.executorService = Executors.newFixedThreadPool(MAX_THREADS);
     }
 
-    public void start()
+    public void start(IServerSocketWrapper serverSocket, String root)
     {
         while(true)
         {
             try
             {
-                ISocketWrapper client = this.serverSocket.accept();
-                HTTPRequestRunner runner = new HTTPRequestRunner(client, new HTTPRequestParser(), this.root);
+                ISocketWrapper client = serverSocket.accept();
+                HTTPRequestRunner runner = new HTTPRequestRunner(client,
+                        Factory.getRequestParser(),
+                        Factory.getRequestReader(),
+                        Factory.getRequestWriter(),
+                        Factory.getResponseBuilder(),
+                        root);
                 executorService.execute(runner);
             }
             catch(IOException ioException)

@@ -5,7 +5,7 @@ import com.andrebystrom.sw2fs.file.IFileWrapper;
 import java.io.IOException;
 import java.util.List;
 
-public class HTTPResponseBuilder
+public class HTTPResponseBuilder implements ResponseBuilder
 {
     private final Response response;
 
@@ -15,7 +15,8 @@ public class HTTPResponseBuilder
         this.response.setVersion("HTTP/1.0");
     }
 
-    public Response buildResponse(HTTPRequest request, IFileWrapper fileWrapper)
+    @Override
+    public Response buildResponse(Request request, IFileWrapper fileWrapper)
             throws IllegalArgumentException, IOException
     {
         if(request == null || fileWrapper == null)

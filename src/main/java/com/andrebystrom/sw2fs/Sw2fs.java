@@ -1,5 +1,6 @@
 package com.andrebystrom.sw2fs;
 
+import com.andrebystrom.sw2fs.factory.Factory;
 import com.andrebystrom.sw2fs.socket.ServerSocketWrapper;
 import com.andrebystrom.sw2fs.web.HTTPServer;
 
@@ -19,8 +20,8 @@ public class Sw2fs
     {
         if(validateArgs(args))
         {
-            HTTPServer server = new HTTPServer(new ServerSocketWrapper(8080), trimRoot(args[0]));
-            server.start();
+            HTTPServer server = new HTTPServer();
+            server.start(new ServerSocketWrapper(8080), trimRoot(args[0]));
         }
         else
         {

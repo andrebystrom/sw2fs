@@ -9,20 +9,27 @@ import java.text.ParseException;
 public class HTTPRequestRunner implements Runnable
 {
     private final ISocketWrapper socketWrapper;
-    private final HTTPRequestParser parser;
-    private HTTPRequest request;
+    private final RequestParser parser;
+    private Request request;
     private Response response;
-    private final HTTPRequestReader reader;
-    private final HTTPRequestWriter writer;
+    private final RequestReader reader;
+    private final RequestWriter writer;
+    private final ResponseBuilder builder;
     private final String root;
 
-    public HTTPRequestRunner(ISocketWrapper socketWrapper, HTTPRequestParser parser, String root)
+    public HTTPRequestRunner(ISocketWrapper socketWrapper,
+                             RequestParser parser,
+                             RequestReader reader,
+                             RequestWriter writer,
+                             ResponseBuilder builder,
+                             String root)
     {
         this.socketWrapper = socketWrapper;
         this.parser = parser;
         this.root = root;
-        this.reader = new HTTPRequestReader();
-        this.writer = new HTTPRequestWriter();
+        this.reader = reader;
+        this.writer = writer;
+        this.builder = builder;
     }
 
     @Override
@@ -38,7 +45,7 @@ public class HTTPRequestRunner implements Runnable
                 this.request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
                         Integer.parseInt(contentLength.trim())));
             }
-            this.response = new HTTPResponseBuilder(new HTTPResponse())
+            this.response = builder
                     .buildResponse(this.request, new FileWrapper(this.root + this.request.getPath()));
             this.writer.write(response, socketWrapper.getOutputStream());
             this.socketWrapper.close();

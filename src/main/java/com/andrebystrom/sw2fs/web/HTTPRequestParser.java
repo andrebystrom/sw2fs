@@ -3,17 +3,18 @@ package com.andrebystrom.sw2fs.web;
 import java.text.ParseException;
 import java.util.Arrays;
 
-public class HTTPRequestParser
+public class HTTPRequestParser implements RequestParser
 {
     private static final String NEW_LINE = "\r\n";
-    private final HTTPRequest httpRequest;
+    private final Request request;
 
-    public HTTPRequestParser()
+    public HTTPRequestParser(Request request)
     {
-        httpRequest = new HTTPRequest();
+        this.request = request;
     }
 
-    public HTTPRequest parse(String request) throws ParseException
+    @Override
+    public Request parse(String request) throws ParseException
     {
         if(request == null || request.length() < 1)
         {
@@ -29,11 +30,10 @@ public class HTTPRequestParser
         parseFirstLine(headers[0]);
         parseHeaders(headers, 1, headers.length);
 
-        httpRequest.setBody(requestParts.length >= 2 ? requestParts[1] : null);
+        this.request.setBody(requestParts.length >= 2 ? requestParts[1] : null);
 
-        return this.httpRequest;
+        return this.request;
     }
-
 
     private void parseFirstLine(String firstLine) throws ParseException
     {
@@ -42,13 +42,13 @@ public class HTTPRequestParser
         {
             throw new ParseException("Invalid first line of HTTP request.", 1);
         }
-        httpRequest.setMethod(Arrays.stream(HTTPMethod.values())
+        this.request.setMethod(Arrays.stream(HTTPMethod.values())
                 .filter(method -> words[0].startsWith(method.name()))
                 .findFirst()
                 .orElseThrow(() -> new ParseException("Not a valid HTTP Request method", 1)));
 
-        httpRequest.setPath(words[1]);
-        httpRequest.setVersion(words[2]);
+        this.request.setPath(words[1]);
+        this.request.setVersion(words[2]);
     }
 
     private void parseHeaders(String[] headerLines, int start, int end) throws ParseException
@@ -66,7 +66,7 @@ public class HTTPRequestParser
             {
                 throw new ParseException("Invalid header name", i + LINE_OFFSET);
             }
-            httpRequest.addHeader(words[0], words[1]);
+            this.request.addHeader(words[0], words[1]);
         }
     }
 }

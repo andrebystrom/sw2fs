@@ -2,10 +2,11 @@ package com.andrebystrom.sw2fs.web;
 
 import java.io.*;
 
-public class HTTPRequestReader
+public class HTTPRequestReader implements RequestReader
 {
     private int bytesRead;
 
+    @Override
     public String readHeaders(InputStream inputStream) throws IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
@@ -22,6 +23,7 @@ public class HTTPRequestReader
         return headers;
     }
 
+    @Override
     public String readBody(InputStream inputStream, int size) throws IOException
     {
         InputStreamReader reader = new InputStreamReader(inputStream);
