@@ -1,6 +1,9 @@
 package com.andrebystrom.sw2fs.web;
 
 import com.andrebystrom.sw2fs.file.IFileWrapper;
+import com.andrebystrom.sw2fs.web.interfaces.Request;
+import com.andrebystrom.sw2fs.web.interfaces.Response;
+import com.andrebystrom.sw2fs.web.interfaces.ResponseBuilder;
 
 import java.io.IOException;
 import java.util.List;

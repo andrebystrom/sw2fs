@@ -1,4 +1,4 @@
-package com.andrebystrom.sw2fs.web;
+package com.andrebystrom.sw2fs.web.interfaces;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.andrebystrom.sw2fs.web.HTTPMethod;
 import com.andrebystrom.sw2fs.web.HTTPRequest;
 import com.andrebystrom.sw2fs.web.HTTPRequestParser;
-import com.andrebystrom.sw2fs.web.Request;
+import com.andrebystrom.sw2fs.web.interfaces.Request;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;

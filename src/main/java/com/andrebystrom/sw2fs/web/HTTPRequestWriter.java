@@ -1,5 +1,8 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.web.interfaces.RequestWriter;
+import com.andrebystrom.sw2fs.web.interfaces.Response;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;

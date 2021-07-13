@@ -1,4 +1,8 @@
-package com.andrebystrom.sw2fs.web;public interface Request
+package com.andrebystrom.sw2fs.web.interfaces;
+
+import com.andrebystrom.sw2fs.web.HTTPMethod;
+
+public interface Request
 {
     HTTPMethod getMethod();
 

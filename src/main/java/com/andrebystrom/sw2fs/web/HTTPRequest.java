@@ -1,5 +1,7 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.web.interfaces.Request;
+
 import java.util.HashMap;
 
 public class HTTPRequest implements Request

@@ -1,6 +1,7 @@
 package com.andrebystrom.sw2fs.factory;
 
 import com.andrebystrom.sw2fs.web.*;
+import com.andrebystrom.sw2fs.web.interfaces.*;
 
 public class Factory
 {

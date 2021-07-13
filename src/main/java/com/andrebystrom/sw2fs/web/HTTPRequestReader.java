@@ -1,5 +1,7 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.web.interfaces.RequestReader;
+
 import java.io.*;
 
 public class HTTPRequestReader implements RequestReader

@@ -2,6 +2,7 @@ package com.andrebystrom.sw2fs.web;
 
 import com.andrebystrom.sw2fs.file.FileWrapper;
 import com.andrebystrom.sw2fs.socket.ISocketWrapper;
+import com.andrebystrom.sw2fs.web.interfaces.*;
 
 import java.io.*;
 import java.text.ParseException;

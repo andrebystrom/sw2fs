@@ -1,5 +1,7 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.web.interfaces.Response;
+
 import java.util.HashMap;
 
 public class HTTPResponse implements Response

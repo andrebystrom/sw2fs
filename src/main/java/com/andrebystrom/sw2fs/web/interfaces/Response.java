@@ -1,4 +1,6 @@
-package com.andrebystrom.sw2fs.web;
+package com.andrebystrom.sw2fs.web.interfaces;
+
+import com.andrebystrom.sw2fs.web.HTTPResponseStatus;
 
 public interface Response
 {

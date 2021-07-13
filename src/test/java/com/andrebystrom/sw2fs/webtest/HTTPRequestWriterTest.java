@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.andrebystrom.sw2fs.web.HTTPRequestWriter;
 import com.andrebystrom.sw2fs.web.HTTPResponse;
 import com.andrebystrom.sw2fs.web.HTTPResponseStatus;
-import com.andrebystrom.sw2fs.web.Response;
+import com.andrebystrom.sw2fs.web.interfaces.Response;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;

@@ -1,5 +1,8 @@
 package com.andrebystrom.sw2fs.web;
 
+import com.andrebystrom.sw2fs.web.interfaces.Request;
+import com.andrebystrom.sw2fs.web.interfaces.RequestParser;
+
 import java.text.ParseException;
 import java.util.Arrays;
 

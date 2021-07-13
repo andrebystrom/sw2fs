@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.andrebystrom.sw2fs.file.IFileWrapper;
 import com.andrebystrom.sw2fs.web.*;
+import com.andrebystrom.sw2fs.web.interfaces.Response;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
