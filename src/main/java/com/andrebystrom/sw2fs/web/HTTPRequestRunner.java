@@ -12,8 +12,6 @@ public class HTTPRequestRunner implements Runnable
 {
     private final ISocketWrapper socketWrapper;
     private final RequestParser parser;
-    private Request request;
-    private Response response;
     private final RequestReader reader;
     private final RequestWriter writer;
     private final ResponseBuilder builder;
@@ -43,16 +41,16 @@ public class HTTPRequestRunner implements Runnable
         try
         {
             String headers = this.reader.readHeaders(this.socketWrapper.getInputStream());
-            this.request = this.parser.parse(headers);
-            this.logger.logMessage("Received request for " + this.request.getPath());
-            String contentLength = this.request.getHeader("content-length");
+            Request request = this.parser.parse(headers);
+            this.logger.logMessage("Received request for " + request.getPath());
+            String contentLength = request.getHeader("content-length");
             if(contentLength != null)
             {
-                this.request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
+                request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
                         Integer.parseInt(contentLength.trim())));
             }
-            this.response = builder
-                    .buildResponse(this.request, new FileWrapper(this.root + this.request.getPath()));
+            Response response = builder
+                    .buildResponse(request, new FileWrapper(this.root + request.getPath()));
             this.writer.write(response, socketWrapper.getOutputStream());
             this.socketWrapper.close();
         }
