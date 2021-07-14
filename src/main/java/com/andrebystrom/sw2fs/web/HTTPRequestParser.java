@@ -6,16 +6,32 @@ import com.andrebystrom.sw2fs.web.interfaces.RequestParser;
 import java.text.ParseException;
 import java.util.Arrays;
 
+/**
+ * Class responsible for parsing a String into an HTTP request.
+ */
 public class HTTPRequestParser implements RequestParser
 {
     private static final String NEW_LINE = "\r\n";
     private final Request request;
 
+    /**
+     * Constructs a new HTTPRequestParser
+     *
+     * @param request the request to parse to.
+     */
     public HTTPRequestParser(Request request)
     {
         this.request = request;
     }
 
+    /**
+     * Parses a String containing an HTTP request into a Request. If the request has no body only the headers will be
+     * parsed.
+     *
+     * @param request the HTTP request to parse.
+     * @return a HTTP request.
+     * @throws ParseException if there's an error parsing the request.
+     */
     @Override
     public Request parse(String request) throws ParseException
     {
