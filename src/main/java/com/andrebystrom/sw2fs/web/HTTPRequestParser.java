@@ -19,23 +19,33 @@ public class HTTPRequestParser implements RequestParser
     @Override
     public Request parse(String request) throws ParseException
     {
-        if(request == null || request.length() < 1)
-        {
-            throw new ParseException("request cannot be null or empty", -1);
-        }
-        String[] requestParts = request.split(NEW_LINE + NEW_LINE);
-        if(requestParts.length < 1)
-        {
-            throw new ParseException("Invalid HTTP request, no header/body separation", -1);
-        }
-        String[] headers = requestParts[0].split(NEW_LINE);
+        validateArgs(request);
 
+        String[] requestParts = request.split(NEW_LINE + NEW_LINE);
+        validateRequestParts(requestParts);
+        String[] headers = requestParts[0].split(NEW_LINE);
         parseFirstLine(headers[0]);
         parseHeaders(headers, 1, headers.length);
 
         this.request.setBody(requestParts.length >= 2 ? requestParts[1] : null);
 
         return this.request;
+    }
+
+    private void validateArgs(String request) throws ParseException
+    {
+        if(request == null || request.length() < 1)
+        {
+            throw new ParseException("request cannot be null or empty", -1);
+        }
+    }
+
+    private void validateRequestParts(String[] requestParts) throws ParseException
+    {
+        if(requestParts.length < 1)
+        {
+            throw new ParseException("Invalid HTTP request, no header/body separation", -1);
+        }
     }
 
     private void parseFirstLine(String firstLine) throws ParseException
