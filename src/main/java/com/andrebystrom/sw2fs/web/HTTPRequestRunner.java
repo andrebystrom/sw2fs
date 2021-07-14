@@ -8,6 +8,9 @@ import com.andrebystrom.sw2fs.web.interfaces.*;
 import java.io.*;
 import java.text.ParseException;
 
+/**
+ * Handles an incoming HTTP Request.
+ */
 public class HTTPRequestRunner implements Runnable
 {
     private final ISocketWrapper socketWrapper;
@@ -18,6 +21,17 @@ public class HTTPRequestRunner implements Runnable
     private final Logger logger;
     private final String root;
 
+    /**
+     * Constructs a new HTTPRequestRunner.
+     *
+     * @param socketWrapper the socket containing the request.
+     * @param parser        the parser to parse the request with.
+     * @param reader        the reader to read the request with.
+     * @param writer        the writer to write a response with.
+     * @param builder       the builder to build a response with.
+     * @param logger        the logger to log information.
+     * @param root          the HTTP root directory.
+     */
     public HTTPRequestRunner(ISocketWrapper socketWrapper,
                              RequestParser parser,
                              RequestReader reader,
@@ -35,6 +49,9 @@ public class HTTPRequestRunner implements Runnable
         this.root = root;
     }
 
+    /**
+     * Receives and responds to an HTTP request.
+     */
     @Override
     public void run()
     {
