@@ -25,6 +25,7 @@ public class HTTPRequest implements Request
 
     /**
      * Get the HTTP request method.
+     *
      * @return the HTTP request method.
      */
     @Override
@@ -35,6 +36,7 @@ public class HTTPRequest implements Request
 
     /**
      * Get the HTTP request path.
+     *
      * @return the HTTP request path.
      */
     @Override
@@ -45,6 +47,7 @@ public class HTTPRequest implements Request
 
     /**
      * Get the HTTP request version.
+     *
      * @return the HTTP request version.
      */
     @Override
@@ -55,6 +58,7 @@ public class HTTPRequest implements Request
 
     /**
      * Set the HTTP request method.
+     *
      * @param method the method to set to.
      */
     @Override
@@ -65,6 +69,7 @@ public class HTTPRequest implements Request
 
     /**
      * Set the HTTP request path.
+     *
      * @param path the path to set to.
      */
     @Override
@@ -75,6 +80,7 @@ public class HTTPRequest implements Request
 
     /**
      * Set the HTTP request version.
+     *
      * @param version the version to set to.
      */
     @Override
@@ -85,6 +91,7 @@ public class HTTPRequest implements Request
 
     /**
      * Get a HTTP request header from the HTTP request.
+     *
      * @param name the name of the header.
      * @return the value of the header or null if it doesn't exist.
      */
@@ -96,8 +103,9 @@ public class HTTPRequest implements Request
 
     /**
      * Adds a header to the HTTP request.
+     *
      * @param name the name of the header.
-     * @param val the value of the header.
+     * @param val  the value of the header.
      */
     @Override
     public void addHeader(String name, String val)
@@ -107,6 +115,7 @@ public class HTTPRequest implements Request
 
     /**
      * Get the body of the HTTP request.
+     *
      * @return the body of the HTTP request.
      */
     @Override
@@ -117,6 +126,7 @@ public class HTTPRequest implements Request
 
     /**
      * Set the body of the HTTP request.
+     *
      * @param body the body to set to.
      */
     @Override
