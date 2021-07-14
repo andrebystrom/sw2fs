@@ -8,17 +8,34 @@ import com.andrebystrom.sw2fs.web.interfaces.ResponseBuilder;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Class responsible for building a HTTP response.
+ */
 public class HTTPResponseBuilder implements ResponseBuilder
 {
     public static final String HTTP_VERSION = "HTTP/1.0";
     private final Response response;
 
+    /**
+     * Constructs a new HTTP response.
+     *
+     * @param response the response to build to.
+     */
     public HTTPResponseBuilder(Response response)
     {
         this.response = response;
         this.response.setVersion(HTTP_VERSION);
     }
 
+    /**
+     * Builds a HTTP response.
+     *
+     * @param request     the HTTP request to build from.
+     * @param fileWrapper the file corresponding to the HTTP request path.
+     * @return a response to the request.
+     * @throws IllegalArgumentException if the request or file is null.
+     * @throws IOException              if there's an issue with the file IO.
+     */
     @Override
     public Response buildResponse(Request request, IFileWrapper fileWrapper)
             throws IllegalArgumentException, IOException
