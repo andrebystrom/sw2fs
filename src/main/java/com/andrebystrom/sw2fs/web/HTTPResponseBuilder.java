@@ -10,12 +10,13 @@ import java.util.List;
 
 public class HTTPResponseBuilder implements ResponseBuilder
 {
+    public static final String HTTP_VERSION = "HTTP/1.0";
     private final Response response;
 
     public HTTPResponseBuilder(Response response)
     {
         this.response = response;
-        this.response.setVersion("HTTP/1.0");
+        this.response.setVersion(HTTP_VERSION);
     }
 
     @Override
@@ -38,46 +39,62 @@ public class HTTPResponseBuilder implements ResponseBuilder
                 }
                 else if(fileWrapper.isFile())
                 {
-                    StringBuilder sb = new StringBuilder();
-                    List<String> lines = fileWrapper.getAllLines();
-                    for(int i = 0; i < lines.size(); i++)
-                    {
-                        sb.append(lines.get(i));
-                        if(i != lines.size() - 1)
-                        {
-                            sb.append("\n");
-                        }
-                    }
-                    response.setBody(sb.toString());
-                    response.addHeader("content-type", "application/octet-stream");
+                    createFileResponse(fileWrapper);
                 }
                 else if(fileWrapper.isDirectory())
                 {
-                    StringBuilder sb = new StringBuilder();
-                    List<IFileWrapper> fileWrappers = fileWrapper.getDirectories();
-                    for(int i = 0; i < fileWrappers.size(); i++)
-                    {
-                        sb.append("<p><a href=\"");
-                        sb.append(request.getPath());
-                        if(!request.getPath().endsWith("/"))
-                        {
-                            sb.append("/");
-                        }
-                        sb.append(fileWrappers.get(i).getName());
-                        sb.append("\">");
-                        sb.append(fileWrappers.get(i).getName());
-                        sb.append("</a></p>");
-                        if(i != fileWrappers.size() - 1)
-                        {
-                            sb.append("\n");
-                        }
-                    }
-                    response.setBody(sb.toString());
+                    createDirectoryResponse(request, fileWrapper);
                 }
                 break;
             default:
-                throw new IllegalArgumentException("Not implemented");
+                // Not implemented yet.
+                response.setStatus(HTTPResponseStatus.NOTFOUND);
         }
         return response;
+    }
+
+    private void createFileResponse(IFileWrapper fileWrapper) throws IOException
+    {
+        StringBuilder sb = new StringBuilder();
+        List<String> lines = fileWrapper.getAllLines();
+        for(int i = 0; i < lines.size(); i++)
+        {
+            sb.append(lines.get(i));
+            if(i != lines.size() - 1)
+            {
+                sb.append("\n");
+            }
+        }
+        response.setBody(sb.toString());
+        response.addHeader("content-type", "application/octet-stream");
+    }
+
+    private void createDirectoryResponse(Request request, IFileWrapper fileWrapper)
+    {
+        StringBuilder sb = new StringBuilder();
+        List<IFileWrapper> fileWrappers = fileWrapper.getDirectories();
+        for(int i = 0; i < fileWrappers.size(); i++)
+        {
+            createFileHTML(request, sb, fileWrappers, i);
+        }
+        response.setBody(sb.toString());
+    }
+
+    private void createFileHTML(Request request, StringBuilder sb, List<IFileWrapper> fileWrappers, int i)
+    {
+        sb.append("<p><a href=\"");
+        sb.append(request.getPath());
+        if(!request.getPath().endsWith("/"))
+        {
+            sb.append("/");
+        }
+        sb.append(fileWrappers.get(i).getName());
+        sb.append("\">");
+        sb.append(fileWrappers.get(i).getName());
+        sb.append("</a></p>");
+        if(i != fileWrappers.size() - 1)
+        {
+            sb.append("\n");
+        }
     }
 }
