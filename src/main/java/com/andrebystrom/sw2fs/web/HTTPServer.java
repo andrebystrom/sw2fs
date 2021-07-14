@@ -8,15 +8,28 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Class responsible for listening to incoming request and kicking of the request handler.
+ */
 public class HTTPServer
 {
     public static final int MAX_THREADS = 20;
     private final ExecutorService executorService;
+
+    /**
+     * Constructs a new HTTP server.
+     */
     public HTTPServer()
     {
         this.executorService = Executors.newFixedThreadPool(MAX_THREADS);
     }
 
+    /**
+     * Starts the HTTP server.
+     *
+     * @param serverSocket the server socket to start.
+     * @param root         the HTTP root path.
+     */
     public void start(IServerSocketWrapper serverSocket, String root)
     {
         while(true)
