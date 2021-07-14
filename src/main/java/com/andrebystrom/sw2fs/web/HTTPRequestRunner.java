@@ -40,19 +40,9 @@ public class HTTPRequestRunner implements Runnable
     {
         try
         {
-            String headers = this.reader.readHeaders(this.socketWrapper.getInputStream());
-            Request request = this.parser.parse(headers);
-            this.logger.logMessage("Received request for " + request.getPath());
-            String contentLength = request.getHeader("content-length");
-            if(contentLength != null)
-            {
-                request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(),
-                        Integer.parseInt(contentLength.trim())));
-            }
-            Response response = builder
-                    .buildResponse(request, new FileWrapper(this.root + request.getPath()));
+            Request request = getRequest();
+            Response response = getRequestResponse(request);
             this.writer.write(response, socketWrapper.getOutputStream());
-            this.socketWrapper.close();
         }
         catch(ParseException parseException)
         {
@@ -65,6 +55,44 @@ public class HTTPRequestRunner implements Runnable
         catch(NumberFormatException numberFormatException)
         {
             this.logger.logError("Failed to get content-length from request.");
+        }
+        finally
+        {
+            closeSocket();
+        }
+    }
+
+    private Request getRequest() throws IOException, ParseException
+    {
+        String headers = this.reader.readHeaders(this.socketWrapper.getInputStream());
+        Request request = this.parser.parse(headers);
+
+        this.logger.logMessage("Received request for " + request.getPath());
+
+        String contentLength = request.getHeader("content-length");
+        if(contentLength != null)
+        {
+            int length = Integer.parseInt(contentLength.trim());
+            request.setBody(this.reader.readBody(this.socketWrapper.getInputStream(), length));
+        }
+
+        return request;
+    }
+
+    private Response getRequestResponse(Request request) throws IOException
+    {
+        return builder.buildResponse(request, new FileWrapper(this.root + request.getPath()));
+    }
+
+    private void closeSocket()
+    {
+        try
+        {
+            this.socketWrapper.close();
+        }
+        catch(IOException e)
+        {
+            logger.logError("Failed to close connection: " + e.getMessage());
         }
     }
 }
