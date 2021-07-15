@@ -7,7 +7,7 @@ clone the repo.
 
 cd into the directory
 
-    cd cd ./sw2fs/
+    cd ./sw2fs/
 
 compile with maven
 
